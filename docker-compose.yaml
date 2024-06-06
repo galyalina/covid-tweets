@@ -26,7 +26,7 @@ services:
     ports:
       - "8000:8000"
     command: >
-     python src/beam_app/main.py
+     python src/beam_app/pipeline.py
       --runner=DirectRunner
       --tcp_host=twitter-simulator
       --tcp_port=5555

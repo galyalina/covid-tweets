@@ -1,0 +1,43 @@
+services:
+  mongodb:
+    image: mongo:4.0.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - covid_tweets_network
+
+  twitter-simulator:
+    build: .
+    ports:
+      - "5555:5555"
+    depends_on:
+      - mongodb
+    command: [ "python", "src/simulator/twitter_stream_simulator.py" ]
+    networks:
+      - covid_tweets_network
+
+  app:
+    build: .
+    depends_on:
+      - mongodb
+      - twitter-simulator
+    ports:
+      - "8000:8000"
+    command: >
+     python src/beam_app/main.py
+      --runner=DirectRunner
+      --tcp_host=twitter-simulator
+      --tcp_port=5555
+      --mongo_uri=mongodb://mongodb:27017/
+      --covid_stats_url=https://www.worldometers.info/coronavirus/
+    networks:
+      - covid_tweets_network
+
+volumes:
+  mongo-data:
+
+# Define user-defined networks
+networks:
+  covid_tweets_network:

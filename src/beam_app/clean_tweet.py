@@ -7,7 +7,7 @@ class CleanTweet(beam.DoFn):
         cleaning_steps = [
             (r"http\S+", ""),  # Remove URLs
             (r"\bRT\s?:\s?", ""),  # Remove 'RT :' and 'RT:'
-            (r"#", "")  # Remove hashtags
+            (r"#", ""),  # Remove hashtags
         ]
 
         for pattern, replacement in cleaning_steps:

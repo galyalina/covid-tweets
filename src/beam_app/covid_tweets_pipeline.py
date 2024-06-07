@@ -11,10 +11,16 @@ import logging
 class CustomPipelineOptions(PipelineOptions):
     @classmethod
     def _add_argparse_args(cls, parser):
-        parser.add_value_provider_argument('--tcp_host', type=str, help='Host for the TCP stream')
-        parser.add_value_provider_argument('--tcp_port', type=int, help='Port for the TCP stream')
-        parser.add_value_provider_argument('--mongo_uri', type=str, help='MongoDB URI')
-        parser.add_value_provider_argument('--covid_stats_url', type=str, help='URL to fetch COVID-19 stats')
+        parser.add_value_provider_argument(
+            "--tcp_host", type=str, help="Host for the TCP stream"
+        )
+        parser.add_value_provider_argument(
+            "--tcp_port", type=int, help="Port for the TCP stream"
+        )
+        parser.add_value_provider_argument("--mongo_uri", type=str, help="MongoDB URI")
+        parser.add_value_provider_argument(
+            "--covid_stats_url", type=str, help="URL to fetch COVID-19 stats"
+        )
 
 
 def process_tweets(custom_options, pipeline):
@@ -23,15 +29,19 @@ def process_tweets(custom_options, pipeline):
     tcp_host = custom_options.tcp_host.get()
     tcp_port = custom_options.tcp_port.get()
 
-    (pipeline
-     | 'Start' >> beam.Create([None])
-     | 'Read Tweets' >> beam.ParDo(ReadFromTCP(tcp_host, tcp_port))
-     | 'Clean Tweets' >> beam.ParDo(CleanTweet())
-     | 'GroupIntoBatches' >> beam.BatchElements(min_batch_size=20, max_batch_size=20)
-     | 'Add Timestamp' >> beam.Map(lambda batch: {'tweets': batch, 'timestamp': datetime.now().isoformat()})
-     | 'Fetch COVID Stats' >> beam.ParDo(FetchCovidStats(covid_url))
-     | 'Save to MongoDB' >> beam.ParDo(SaveToMongoDB(mongo_uri))
-     )
+    (
+        pipeline
+        | "Start" >> beam.Create([None])
+        | "Read Tweets" >> beam.ParDo(ReadFromTCP(tcp_host, tcp_port))
+        | "Clean Tweets" >> beam.ParDo(CleanTweet())
+        | "GroupIntoBatches" >> beam.BatchElements(min_batch_size=20, max_batch_size=20)
+        | "Add Timestamp"
+        >> beam.Map(
+            lambda batch: {"tweets": batch, "timestamp": datetime.now().isoformat()}
+        )
+        | "Fetch COVID Stats" >> beam.ParDo(FetchCovidStats(covid_url))
+        | "Save to MongoDB" >> beam.ParDo(SaveToMongoDB(mongo_uri))
+    )
 
 
 def run(pipeline_options):
@@ -41,7 +51,7 @@ def run(pipeline_options):
         process_tweets(custom_options, p)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     logging.getLogger(__name__).setLevel(logging.INFO)
     logging.info("Pipeline stated")
     pipeline_options = PipelineOptions()

@@ -3,12 +3,12 @@ import apache_beam as beam
 
 class MockReadFromTCP(beam.DoFn):
     def process(self, element):
-        return ['mocked_tweet']
+        return ["mocked_tweet"]
 
 
 class MockFetchCovidStats(beam.DoFn):
     def process(self, element):
-        element['total_case_count'] = 123456
+        element["total_case_count"] = 123456
         return [element]
 
 

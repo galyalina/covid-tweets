@@ -35,7 +35,7 @@ class ReadFromTCP(beam.DoFn):
             try:
                 data = self.client_socket.recv(2048)  # Adjust buffer size as needed
                 if data:
-                    yield data.decode('utf-8')
+                    yield data.decode("utf-8")
             except (ConnectionResetError, BrokenPipeError) as e:
                 self.logger.warning(f"Connection lost: {e}")
                 self.start_bundle()  # Attempt to reconnect

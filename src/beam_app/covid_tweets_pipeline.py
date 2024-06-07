@@ -38,7 +38,7 @@ def run(pipeline_options):
     custom_options = pipeline_options.view_as(CustomPipelineOptions)
 
     with beam.Pipeline(options=pipeline_options) as p:
-        process_feeds(options=custom_options, pipeline=p)
+        process_tweets(custom_options, p)
 
 
 if __name__ == '__main__':

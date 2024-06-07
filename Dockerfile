@@ -14,4 +14,4 @@ COPY src ./src
 ENV PYTHONPATH /app/src
 
 # Set the default command to run the application
-CMD ["python", "/app/src/beam_app/pipeline.py"]
+CMD ["python", "src/beam_app/covid_tweets_pipeline.py"]

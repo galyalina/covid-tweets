@@ -1,0 +1,5 @@
+apache-beam==2.56.0
+beautifulsoup4==4.12.3
+pymongo==4.7.2
+requests==2.32.3
+black==22.3.0
